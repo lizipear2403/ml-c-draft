@@ -1,3 +1,4 @@
 #!/bin/bash
 
-gcc main.c -o NN -Wall && ./NN
+set -xe
+gcc main.c -o NN -lm -Wall && ./NN
