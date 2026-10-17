@@ -64,8 +64,8 @@ struct KWords {
 };
 typedef struct KWords KWords;
 
-KWords *preProcess(const char *str, size_t *len) {
-  KWords *res = (KWords *)malloc(sizeof(sizeof(KWords) * (*len)));
+KWords *preProcess(const char *str, size_t len) {
+  KWords *res = (KWords *)malloc((sizeof(KWords) * (len)));
   return res;
 }
 
@@ -86,7 +86,7 @@ struct Neuron {
 typedef struct Neuron Neuron;
 
 float test_data[][3] = {{1, 1, 0}, {1, 0, 1}, {0, 1, 1}, {0, 0, 0}};
-#define data_len (sizeof(test_data) / sizeof(test_data[0]))
+#define data_len ((int)(sizeof(test_data) / sizeof(test_data[0])))
 float sigmoid(float v) { return (1.0f) / (1 + expf(-v)); }
 
 float getNeuron(Neuron n, float x1, float x2) {
@@ -118,17 +118,21 @@ float multiLoss(Neuron neu_1, Neuron neu_2, Neuron neu_3) {
   return loss;
 }
 
-float multiLayer() {
-  Neuron neu_1 = {rand() % 10 / 10.0f, rand() % 10 / 10.0f,
-                  rand() % 10 / 10.0f};
-  Neuron neu_2 = {rand() % 10 / 10.0f, rand() % 10 / 10.0f,
-                  rand() % 10 / 10.0f};
-  Neuron neu_3 = {rand() % 10 / 10.0f, rand() % 10 / 10.0f,
-                  rand() % 10 / 10.0f};
+float rand_float() { return ((float)rand() / RAND_MAX); }
 
-  int train_count = 2 << 18;
+float multiLayer() {
+  Neuron neu_1 = {rand_float(), rand_float(), rand_float()};
+  Neuron neu_2 = {rand_float(), rand_float(), rand_float()};
+  Neuron neu_3 = {rand_float(), rand_float(), rand_float()};
+
+  // Neuron neu_2 = {rand() % 10 / 10.0f, rand() % 10 / 10.0f,
+  //                 rand() % 10 / 10.0f};
+  // Neuron neu_3 = {rand() % 10 / 10.0f, rand() % 10 / 10.0f,
+  //                 rand() % 10 / 10.0f};
+
+  int train_count = 2 << 14;
   float rate = 1e-1;
-  float eps = 1e0;
+  float eps = 1e-4;
 
   for (int i = 0; i < train_count; i++) {
 

@@ -1,4 +1,4 @@
 #!/bin/bash
 
 set -xe
-gcc main.c -o NN -lm -Wall && ./NN
+gcc multiLayer.c -o NN -lm -Wall -Wextra && ./NN
