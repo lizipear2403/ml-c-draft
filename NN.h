@@ -7,6 +7,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 // 矩阵库
 //
 typedef struct {
@@ -18,27 +19,42 @@ typedef struct {
 Mat allocMat(size_t row, size_t col);
 void matDot(Mat dst, Mat a, Mat b);
 void matSum(Mat dst, Mat a, Mat b);
-void print_mat(Mat s);
+void print_mat(Mat s, const char *name);
 void randMat(Mat s);
 void fillMat(Mat s, float x);
 void mapMat(Mat s, float (*func)(float v));
+void line();
 
 float sigmoid(float x);
 
 float randf();
 #endif
 
-#define NN_IM
 #ifdef NN_IM
 
 #define MAT_AT(m, i, j) (m).es[(i) * (m).col + (j)]
+#define PRINT_MAT(m) print_mat(m, #m)
 
 float randf() { return (rand() / (float)RAND_MAX); }
+
 Mat allocMat(size_t row, size_t col) {
   Mat res = {.col = col, .row = row};
   float *e = (float *)malloc(row * col * (sizeof(*(res.es))));
+  // memset(e, 0, (row * col * (sizeof(*(res.es)))));
   res.es = e;
+  fillMat(res, 0.0f);
   return res;
+}
+
+void line() { printf("--------------------------------------------------\n"); }
+
+Mat idMat(size_t size) {
+  Mat id = allocMat(size, size);
+  fillMat(id, 0.0f);
+  for (size_t i = 0; i < size; i++) {
+    MAT_AT(id, i, i) = 1.0f;
+  }
+  return id;
 }
 
 float sigmoid(float v) { return (1.0f) / (1 + expf(-v)); }
@@ -94,11 +110,11 @@ void matSum(Mat dst, Mat a, Mat b) {
     }
   }
 }
-
-void print_mat(Mat s) {
+void print_mat(Mat s, const char *name) {
+  printf("%s = \n", name);
   for (size_t i = 0; i < s.row; i++) {
     for (size_t j = 0; j < s.col; j++) {
-      printf("Mat[%zu][%zu]=%.2f  ", i, j, MAT_AT(s, i, j));
+      printf("[%zu][%zu]=%.2f  ", i, j, MAT_AT(s, i, j));
     }
     putc('\n', stdout);
   }
